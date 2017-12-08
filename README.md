@@ -1,57 +1,30 @@
 # Project Name
 
-(short, 1-3 sentenced, description of the project)
+This repository contains sample code for a demo Kubernetes application showcased in blog series https://blogs.msdn.microsoft.com/azurecat/2017/10/24/choosing-the-right-kubernetes-object-for-deploying-workloads-in-azure/
 
 ## Features
 
-This project framework provides the following features:
+Sample code has following features:
 
-* Feature 1
-* Feature 2
-* ...
+* ASP.Net Core (1.0) Application
+* SQL Server back-end creation script
+* Kubernetes SQL Server StatefulSet Creation Manifest
+* Kubernetes ASP.Net Core HorizontalPodAutoScaler Manifest
 
 ## Getting Started
 
 ### Prerequisites
 
-(ideally very short, if any)
-
-- OS
-- Library version
-- ...
-
-### Installation
-
-(ideally very short)
-
-- npm install [package name]
-- mvn install
-- ...
+- Visual Studio 2017
 
 ### Quickstart
-(Add steps to get up and running quickly)
 
 1. git clone [repository clone url]
 2. cd [respository name]
-3. ...
-
-
-## Demo
-
-A demo app is included to show how to use the project.
-
-To run the demo, follow these steps:
-
-(Add steps to start up the demo)
-
-1.
-2.
-3.
+3. Open Visual Studio Project File
+4. restore nuget packages
+5. Compile and run the code from Visual Studio
 
 ## Resources
 
-(Any additional resources or related projects)
-
-- Link to supporting information
-- Link to similar sample
-- ...
+- https://blogs.msdn.microsoft.com/azurecat/2017/10/24/choosing-the-right-kubernetes-object-for-deploying-workloads-in-azure/
