@@ -1,0 +1,45 @@
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: aspnetcoreapp-deployment
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: aspnetcoreapp
+    spec:
+      containers:
+      - name: aspnetcoreapp
+        image: maksh/aspnetcorekuberappimg
+        ports:
+        - containerPort: 5000
+        resources:
+          requests:
+            cpu: 1m
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: aspnetcoreapp-service
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+  selector:
+    app: aspnetcoreapp
+---
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: aspnetcoreapp-hpa
+  namespace: default
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1beta1
+    kind: Deployment
+    name: aspnetcoreapp-deployment
+  minReplicas: 1
+  maxReplicas: 2
+  targetCPUUtilizationPercentage: 20

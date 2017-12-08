@@ -1,0 +1,21 @@
+version: '2'
+services:
+
+  shoppingcartweb:
+    image: maksh/scweb
+    ports:
+      - "8080:80"
+    depends_on:
+      - sqlinux
+    networks:
+      - 2t
+
+  sqlinux:
+    image: maksh/snoopyshoppingcartdb
+    ports:
+      - "1433:1433"
+    networks:
+      - 2t
+      
+networks:
+  2t:

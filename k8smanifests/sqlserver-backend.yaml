@@ -1,0 +1,81 @@
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: sqlsecret
+type: Opaque
+data:
+  sapassword: UGFzc3dvcmQxMjM0
+---
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: azurestorageclass
+provisioner: kubernetes.io/azure-disk
+parameters:
+  skuName: Standard_LRS
+  location: southeastasia
+  storageAccount: makshsqldb
+---
+apiVersion: "v1"
+kind: "PersistentVolumeClaim"
+metadata:
+  name: "sqldb-pv"
+  annotations:
+    volume.beta.kubernetes.io/storage-class: "azurestorageclass"
+spec:
+  accessModes:
+    - "ReadWriteOnce"
+  resources:
+    requests:
+      storage: "10Gi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sqlservice
+  labels:
+    app: sqlservice
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 1433
+    targetPort: 1433
+  selector:
+    app: sqlinux
+---
+apiVersion: apps/v1beta1
+kind: StatefulSet
+metadata:
+  name: sqlserverstatefulset
+spec:
+  serviceName: sqlservice
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: sqlinux
+    spec:
+      containers:
+        - name: sqlinux
+          image: microsoft/mssql-server-linux
+          env:
+            - name: SA_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: sqlsecret
+                  key: sapassword
+            - name: ACCEPT_EULA
+              value: "Y"
+          ports:
+            - containerPort: 1433
+          volumeMounts:
+            - mountPath: /var/opt
+              name: sqldb-home
+      volumes:
+      - name: sqldb-home
+        persistentVolumeClaim:
+          claimName: sqldb-pv
+          
+
+          

@@ -1,0 +1,113 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+
+<div class="row">
+    <div id="newCartItemDiv" class="col-md-4">
+        <h4>You are about to buy:</h4>
+       <h1 id="newCartItemH1"></h1>
+    </div>
+    <div class="col-md-4">
+        <h4>What others are buying:</h4>
+        <h4 id="itemsofothers"></h4>
+    </div>
+    <div class="col-md-4">
+        <h4>Items bought:</h4>
+    </div>
+</div>
+
+<div class="row">
+    <div id='myMap' style='height: 100vh;'></div>
+</div>
+
+<script language="javascript" type="text/javascript">
+    var carthub = $.connection.cart;
+    var map;
+    var userip;
+
+    function loadBingMap() {
+        var navigationBarMode = Microsoft.Maps.NavigationBarMode;
+
+        map = new Microsoft.Maps.Map(document.getElementById('myMap'), {
+            credentials: 'AgGbhOlqPV1kXptlEaWsvK6ne-jKhc0nw29sARxQwdINdTRcWQih1ZjwQXSOFYoj',
+            center: new Microsoft.Maps.Location(0, 0),
+            mapTypeId: Microsoft.Maps.MapTypeId.Road,
+            zoom: 2,
+            navigationBarMode: navigationBarMode.compact
+        });
+    }
+
+    function repeatProcess() {
+        
+        for (var i = map.entities.getLength() - 1; i >= 0; i--) {
+            var pushpin = map.entities.get(i);
+            if (pushpin instanceof Microsoft.Maps.Pushpin) {
+                map.entities.removeAt(i);
+            }
+        }
+
+        //$.connection.hub.logging = true;
+        $.connection.hub.start().done(function () {
+            carthub.server.connect(userip, $("#newCartItemH1").text());
+            carthub.server.send();
+        });
+
+        
+    }
+
+    function write(message, textdiv, outerdiv) {
+        textdiv.innerHTML = message;
+        outerdiv.replaceChild(textdiv, textdiv);
+    }
+
+    function writeitemsofothers(itemsofothers)
+    {
+        var html = '<ul>'
+        $.each(itemsofothers, function (ip, item) {
+            
+            html += "<li>" + ip + ":  " + item + "</li>";
+
+            var gcurl = "http://freegeoip.net/json/";
+            var ipRegex = /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/;
+
+            if ($.trim(ip) != '' && ipRegex.test(ip)) {
+                var url = encodeURI(gcurl + ip + "?callback=?");
+
+                $.getJSON(url, function (data) {
+
+                    if ($.trim(data.latitude) != '' && data.latitude != '0' && !isNaN(data.latitude)) {
+                        var latitude = data.latitude;
+                        var longitude = data.longitude;
+
+                        var loc = new Microsoft.Maps.Location(latitude, longitude);
+                        var pushpin = new Microsoft.Maps.Pushpin(loc, 
+                                                                    {
+                                                                        //icon: 'https://ecn.dev.virtualearth.net/mapcontrol/v7.0/7.0.20150902134620.61/i/poi_search.png',
+                                                                        title: item
+                                                                        //anchor: new Microsoft.Maps.Point(12, 39)
+                                                                    });
+
+                        map.entities.push(pushpin);
+                    }
+                });
+            };
+        });
+
+        html += '</ul>';
+        $('#itemsofothers').html(html);
+
+    }
+
+    carthub.client.messageReceived = function (message) {
+        
+        write(message.NewCartItem, newCartItemH1, newCartItemDiv);
+
+        writeitemsofothers(message.CartItemsOfOthers);
+    };
+
+    setInterval(repeatProcess, 1500);
+
+    loadBingMap();
+
+</script>
