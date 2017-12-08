@@ -16,6 +16,7 @@ Sample code has following features:
 ### Prerequisites
 
 - Visual Studio 2017
+- Add https://dotnet.myget.org/F/aspnetcore-dev/api/v3/index.json as a package source for MyGet repository 
 
 ### Quickstart
 
