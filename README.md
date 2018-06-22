@@ -1,10 +1,10 @@
-# Project Name
+# Choosing the Right Kubernetes Object for Deploying Workloads in Azure
 
-This repository contains sample code for a demo Kubernetes application showcased in blog series https://blogs.msdn.microsoft.com/azurecat/2017/10/24/choosing-the-right-kubernetes-object-for-deploying-workloads-in-azure/
+This repository contains sample code for a demo Kubernetes application showcased in the blog series https://blogs.msdn.microsoft.com/azurecat/2017/10/24/choosing-the-right-kubernetes-object-for-deploying-workloads-in-azure/
 
 ## Features
 
-Sample code has following features:
+This sample code has the following features:
 
 * ASP.Net Core (1.0) Application
 * SQL Server back-end creation script
@@ -16,7 +16,7 @@ Sample code has following features:
 ### Prerequisites
 
 - Visual Studio 2017
-- Add https://dotnet.myget.org/F/aspnetcore-dev/api/v3/index.json as a package source for MyGet repository 
+- Add https://dotnet.myget.org/F/aspnetcore-dev/api/v3/index.json as a package source for the MyGet repository 
 
 ### Quickstart
 
