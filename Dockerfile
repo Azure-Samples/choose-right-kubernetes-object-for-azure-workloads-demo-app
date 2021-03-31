@@ -1,7 +1,7 @@
 # The `FROM` instruction specifies the base image. You are
-# extending the `microsoft/aspnetcore` image.
+# extending the `mcr.microsoft.com/dotnet/core/aspnet` image.
 
-FROM microsoft/aspnetcore
+FROM mcr.microsoft.com/dotnet/core/aspnet
 
 # Next, this Dockerfile creates a directory for your application
 WORKDIR /app
